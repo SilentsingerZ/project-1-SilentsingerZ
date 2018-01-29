@@ -1,6 +1,4 @@
-# 2018-Project1
-
-<b>Project 1: Visualizing Anscombe’s Quartet</b>
+<h1>Project 1: Visualizing Anscombe’s Quartet</h1>
 
 Due 11:59pm, Friday, February 9 through GitHub
 
