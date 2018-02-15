@@ -13,6 +13,6 @@ Bell: Xs and Ys
 Bell: Best Fit Lines
 ✔Whistle: Transitions
 ✔Whistle: Replication
-We used Excel to replicate four charts. We feel that Excel is such a great thing to plot data. Thanks Microsoft! Excel is easier than html to plotting data.
+We used Excel to replicate four charts. We feel that Excel is such a great thing to plot data. Thanks Microsoft! Excel is easier than html to plot data.
 
 Whistle: Coordinated Views
