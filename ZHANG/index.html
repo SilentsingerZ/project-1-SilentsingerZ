@@ -1,0 +1,357 @@
+<html>
+<head>
+    <title>Yonghao Zhang's project 1</title>
+    <style type="text/css" href="project1.css"></style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <!--Put your D3 import statement between these two lines-->
+    <script src="http://d3js.org/d3.v4.js" charset="utf-8"></script>
+    <!--Put your D3 import statement between these two lines-->
+    <!--Import Pure CSS module https://purecss.io/-->
+    <link rel="stylesheet" href="project1.css">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css"
+          integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w"
+          crossorigin="anonymous">
+</head>
+
+<body>
+  <!--Apple Pure Menu Package/-->
+  <div class="pure-menu pure-menu-horizontal" id="tab_bar">
+    <style scoped>
+       .button-menu {
+         overflow: hidden;
+         display: inline-block;
+         font-size: 150%;
+         line-height: 2;
+         width: 170;
+         color: black;
+         background-color: white;
+         border: none;
+         outline: none;
+       }
+       .pure-button:hover{
+         background-color: grey;
+         color: white;
+       }
+   </style>
+    <button class="button-menu pure-button pure-button-active" id="part1">Part 1</button>
+    <button class="button-menu pure-button pure-button-active" id="part2">Part 2</button>
+    <button class="button-menu pure-button pure-button-active" id="part3_4">Part3 & Part4</button>
+    <button class="button-menu pure-button pure-button-active" id="part5">Part 5</button>
+    <button class="button-menu pure-button pure-button-active" id="part6">Replication</button>
+  </div>
+
+  <div id="content">
+    <div id="partOne">
+        <h1>Part One: </h1>
+        <h2>Interpreting Data </h2>
+    </div>
+
+    <div id="partTwo">
+        <h1>Part Two: </h1>
+        <h2>Building Scatterplots </h2>
+        <select id="data_select1">
+          <option value=0>Anscombe I</option>
+          <option value=1>Anscombe II</option>
+          <option value=2>Anscombe III</option>
+          <option value=3>Anscombe IV</option>
+        </select>
+        <div id="scatterplot">
+        </div>
+    </div>
+
+    <div id="partThree">
+        <h1>Part Three &amp; Four: </h1>
+        <h2>Building Line Graphs & Interaction </h2>
+        <select id="data_select2">
+          <option value=0>Anscombe I</option>
+          <option value=1>Anscombe II</option>
+          <option value=2>Anscombe III</option>
+          <option value=3>Anscombe IV</option>
+        </select>
+        <div id="linegraph">
+          <p id="lineLabel"></p>
+        </div>
+    </div>
+
+    <div id="partFive">
+        <h1>Part Five: </h1>
+        <h2>Building Multiple Charts </h2>
+        <div id="scatterplotSet">
+          <div id="area1"></div>
+          <div id="area2"></div>
+          <div id="area3"></div>
+          <div id="area4"></div>
+        </div>
+        <div id="graphs">
+        </div>
+    </div>
+
+
+    <!--Replicate each of your graphs using Excel-->
+    <div id="partSix">
+      <h1>Part Six: </h1>
+      <div>
+        <h2>Anscombe I</h2>
+        <img src="image/Anscombe_I.png">
+      </div>
+      <div>
+        <h2>Anscombe II</h2>
+        <img src="image/Anscombe_II.png">
+      </div>
+      <div>
+        <h2>Anscombe III</h2>
+        <img src="image/anscombe_III.png">
+      </div>
+      <div>
+        <h2>Anscombe IV</h2>
+        <img src="image/anscombe_IV.png">
+      </div>
+    </div>
+
+    <script type="text/javascript">
+        // Put your part one code here ***********************
+        d3.csv("data/anscombe_I.csv", function(data1){
+          return checkDataset(data1)});
+        d3.csv("data/anscombe_II.csv", function(data2){
+          return checkDataset(data2)});
+        d3.csv("data/anscombe_III.csv", function(data3){
+          return checkDataset(data3)});
+        d3.csv("data/anscombe_IV.csv", function(data4){
+          return checkDataset(data4)});
+
+        // Leave this to test your data uploading. All data uploading should be above this line
+        function checkDataset(dataset) {
+            if (dataset.length == 11)
+                $("#partOne").append("<p>data loaded correctly</p>");
+            else
+                $("#partOne").append("<p>data loaded incorrectly. Try using the debugger to help you find the bug!</p>");
+        }
+
+        // Put your part two code here ***********************
+        part2(0);
+        var select1=document.getElementById("data_select1");
+        select1.addEventListener("change",function(d){
+          // add an event listener to trigger the polt changes
+          part2(select1.value);
+        });
+        function part2(value){
+          var div = document.getElementById('scatterplot');
+          while(div.firstChild){
+            div.removeChild(div.firstChild);
+          }
+          var margin = {top:20, right: 20, bottom: 30, left: 50},
+          width = 500- margin.left - margin.right,
+          height = 300 - margin.top - margin.bottom;
+        var xValue = function(d) { return parseFloat(d['x']);}, // data -> value
+        xScale = d3.scaleLinear().range([0, width]);
+        // setup y
+        var yValue = function(d) { return parseFloat(d['y']);}, // data -> value
+        yScale = d3.scaleLinear().range([height, 0]);
+        var svg = d3.select("#scatterplot").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        var data_files=["data/anscombe_I.csv","data/anscombe_II.csv","data/anscombe_III.csv","data/anscombe_IV.csv"];
+        //load proper data file based on the selection
+        d3.csv(data_files[value], function(data){
+          xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+1]);
+          yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+1]);
+          // draw dots
+          svg.selectAll(".dot")
+             .data(data)
+             .enter()
+             .append("circle")
+             .attr("class", "dot")
+             .attr("r", 8)
+             .attr("fill", "black")
+             .attr("cx", function(d){return xScale(d['x']);})
+             .attr("cy", function(d){return yScale(d['y']);});
+          //draw x-axis
+          svg.append("g")
+             .attr("transform", "translate(0," + height + ")")
+             .call(d3.axisBottom(xScale));
+          //x-axis label
+          svg.append("text")
+             .attr("class", "label")
+             .text("X")
+             .attr("x", width)
+             .attr("y", height-5);
+           //draw y-axis
+           svg.append("g")
+              .call(d3.axisLeft(yScale));
+           //y-axis label
+           svg.append("text")
+              .attr("class", "label")
+              .text("Y")
+              .attr("x", 5)
+              .attr("y", 0);
+         });
+       }
+
+        // Put your part three & four code here ***********************
+        part3(0);
+        var select=document.getElementById("data_select2");
+        select.addEventListener("change",function(d){
+          // add an event listener to trigger the polt changes
+          part3(select.value);
+        });
+        function part3(value){
+          var div = document.getElementById('linegraph');
+          while(div.firstChild){
+            div.removeChild(div.firstChild);
+          }
+          var margin = {top:20, right: 20, bottom: 30, left: 50},
+              width = 500- margin.left - margin.right,
+              height = 300 - margin.top - margin.bottom;
+          var xValue = function(d) { return parseFloat(d['x']);}, // data -> value
+          xScale = d3.scaleLinear().range([0, width]);
+          // setup y
+          var yValue = function(d) { return parseFloat(d['y']);}, // data -> value
+          yScale = d3.scaleLinear().range([height, 0]);
+          var svg = d3.select("#linegraph").append("svg")
+                      .attr("width", width + margin.left + margin.right)
+                      .attr("height", height + margin.top + margin.bottom)
+                      .append("g")
+                      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        var data_files=["data/anscombe_I.csv","data/anscombe_II.csv","data/anscombe_III.csv","data/anscombe_IV.csv"];
+        //load proper data file based on the selection
+        d3.csv(data_files[value], function(data){
+          xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+1]);
+          yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+1]);
+          data.sort(function(a,b){return a.x-b.x});
+          //tooltip for extra credit
+          var tooltip = d3.select("#linegraph").append("div").attr("id", "toolTip");
+          tooltip.style("position","relative").
+          style("height","auto").
+          style("font-size","14");
+
+          // draw dots
+          svg.selectAll(".dot")
+             .data(data)
+             .enter()
+             .append("circle")
+             .attr("class", "dot")
+             .attr("r", 8)
+             .attr("fill", "black")
+             .attr("cx", function(d){return xScale(d['x']);})
+             .attr("cy", function(d){return yScale(d['y']);})
+             .on("mouseover", function(d) {
+               //change dot color when mouse hove over
+               var dot = d3.select(this);
+               dot.style('fill','red')
+                  .attr('r',15);
+            //show tooltip
+               d3.select("#tooltip")
+                 .style("left", d3.mouse(this)[0]-width - 45)
+                 .style("top", d3.mouse(this)[1]-height - 50)
+                 .style("display","inline-block")
+                 .text("("+d.x+","+d.y+")");
+            })
+            .on("mouseout", function(d) {
+              //change back the color
+              var dot = d3.select(this);
+              dot.style('fill','black')
+                 .attr('r',8);
+              //hide tooltip
+              d3.select("#tooltip").style("display","none");
+            })
+            .on("click",function(d){
+              document.getElementById("lineLabel").innerHTML = "Values: "+'('+d.x+','+d.y+')';
+            });
+            var vline = d3.line()
+            .x(function(d) { return xScale(d['x']); })
+            .y(function(d) { return yScale(d['y']); });
+            svg.append("path")
+               .data([data])
+               .attr("fill", "none")
+               .attr("stroke", "red")
+               .attr("stroke-linejoin", "round")
+               .attr("stroke-linecap", "round")
+               .attr("stroke-width", 3)
+               .attr("d", vline(data));
+           // x-axis
+           svg.append("g")
+              .attr("transform", "translate(0," + height + ")")
+              .call(d3.axisBottom(xScale));
+           svg.append("text")
+              .attr("class", "label")
+              .text("X")
+              .attr("x", width)
+              .attr("y", height-5);
+           // y-axis
+           svg.append("g")
+              .call(d3.axisLeft(yScale));
+           svg.append("text")
+              .attr("class", "label")
+              .text("Y")
+              .attr("x", 5)
+              .attr("y", 0);
+         });
+       }
+
+        // Put your part five code here ***********************
+        //This part is similar to former parts and what I mainly do here is changing the margin and size of the graph, and a the same time, add a title for each graph.
+        //anscombe_I graph
+        part5();
+        function part5(){
+          var data_files=["data/anscombe_I.csv","data/anscombe_II.csv","data/anscombe_III.csv","data/anscombe_IV.csv"];
+          var labels=["Anscombe I","Anscombe II","Anscombe III","Anscombe IV"];
+        for(i=0;i<4;i++){
+          draw_scatterplot(data_files[i],labels[i]);
+        }
+        }
+        function draw_scatterplot(file,label_text){
+        var margin = {top: 20, right: 20, bottom:30, left: 50},
+            width = 500 - margin.left - margin.right,
+            height = 300 - margin.top - margin.bottom;
+        var xValue = function(d) { return parseFloat(d['x']);}, // data -> value
+        xScale = d3.scaleLinear().range([0, width]);
+        // setup y
+        var yValue = function(d) { return parseFloat(d['y']);}, // data -> value
+        yScale = d3.scaleLinear().range([height, 0]);
+        var svg = d3.select("#area4").append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        d3.csv(file, function(data){
+          xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+1]);
+          yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+1]);
+          // draw dots
+          svg.selectAll(".dot")
+             .data(data)
+             .enter()
+             .append("circle")
+             .attr("class", "dot")
+             .attr("r", 4)
+             .attr("cx", function(d){return xScale(d['x']);})
+             .attr("cy", function(d){return yScale(d['y']);});
+           // x-axis
+           svg.append("g")
+              .attr("transform", "translate(0," + height + ")")
+              .call(d3.axisBottom(xScale));
+           svg.append("text")
+              .attr("class", "label")
+              .text("X")
+              .attr("x", width)
+              .attr("y", height-5);
+           // y-axis
+           svg.append("g")
+              .call(d3.axisLeft(yScale));
+           svg.append("text")
+              .attr("class", "label")
+              .text("Y")
+              .attr("x", 5)
+              .attr("y", 0);
+          svg.append("text")
+             .attr("class", "label")
+             .text(label_text)
+             .attr("x", width/3)
+             .attr("y", 0 ); });
+        }
+
+    </script>
+</body>
+</html>
+<script src="project.js"></script>
